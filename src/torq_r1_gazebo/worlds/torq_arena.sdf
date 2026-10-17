@@ -1,0 +1,126 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="torq_arena">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <!-- Lighting -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.4 0.2 -1.0</direction>
+    </light>
+
+    <!-- Arena Ground Floor -->
+    <model name="arena_ground">
+      <static>true</static>
+      <link name="ground_link">
+        <collision name="c"><geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="v"><geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+          <material><ambient>0.6 0.65 0.6 1</ambient><diffuse>0.6 0.65 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Outer Perimeter (18m x 14m) -->
+    <model name="p_wall_n"><static>true</static><pose>0 7 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>18.2 0.2 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>18.2 0.2 0.8</size></box></geometry><material><ambient>0.3 0.4 0.5 1</ambient><diffuse>0.3 0.4 0.5 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="p_wall_s"><static>true</static><pose>0 -7 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>18.2 0.2 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>18.2 0.2 0.8</size></box></geometry><material><ambient>0.3 0.4 0.5 1</ambient><diffuse>0.3 0.4 0.5 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="p_wall_e"><static>true</static><pose>9 0 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.2 14.0 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 14.0 0.8</size></box></geometry><material><ambient>0.3 0.4 0.5 1</ambient><diffuse>0.3 0.4 0.5 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="p_wall_w"><static>true</static><pose>-9 0 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.2 14.0 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 14.0 0.8</size></box></geometry><material><ambient>0.3 0.4 0.5 1</ambient><diffuse>0.3 0.4 0.5 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Central Divider Wall with opening -->
+    <model name="div_wall_1"><static>true</static><pose>0 3.5 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.2 6.8 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 6.8 0.8</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="div_wall_2"><static>true</static><pose>0 -4.5 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.2 4.8 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 4.8 0.8</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- WEST ZONE: Lane Road Circuit (x: -8 to -1) -->
+    <model name="arena_lanes">
+      <static>true</static>
+      <pose>-4.5 0 0.002 0 0 0</pose>
+      <link name="lane_link">
+        <!-- Asphalt surface -->
+        <visual name="road_n"><pose>0 4 0 0 0 0</pose><geometry><box><size>6.0 1.2 0.002</size></box></geometry><material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.18 0.18 0.18 1</diffuse></material></visual>
+        <visual name="wl_n"><pose>0 4.55 0.001 0 0 0</pose><geometry><box><size>6.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="wr_n"><pose>0 3.45 0.001 0 0 0</pose><geometry><box><size>6.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="yc_n"><pose>0 4.0 0.001 0 0 0</pose><geometry><box><size>6.0 0.05 0.002</size></box></geometry><material><ambient>1 0.85 0 1</ambient><diffuse>1 0.85 0 1</diffuse></material></visual>
+
+        <visual name="road_s"><pose>0 -4 0 0 0 0</pose><geometry><box><size>6.0 1.2 0.002</size></box></geometry><material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.18 0.18 0.18 1</diffuse></material></visual>
+        <visual name="wl_s"><pose>0 -3.45 0.001 0 0 0</pose><geometry><box><size>6.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="wr_s"><pose>0 -4.55 0.001 0 0 0</pose><geometry><box><size>6.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="yc_s"><pose>0 -4.0 0.001 0 0 0</pose><geometry><box><size>6.0 0.05 0.002</size></box></geometry><material><ambient>1 0.85 0 1</ambient><diffuse>1 0.85 0 1</diffuse></material></visual>
+
+        <visual name="road_w"><pose>-3 0 0 0 0 1.5707963</pose><geometry><box><size>7.0 1.2 0.002</size></box></geometry><material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.18 0.18 0.18 1</diffuse></material></visual>
+        <visual name="wl_w"><pose>-2.45 0 0.001 0 0 1.5707963</pose><geometry><box><size>7.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="wr_w"><pose>-3.55 0 0.001 0 0 1.5707963</pose><geometry><box><size>7.0 0.06 0.002</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="yc_w"><pose>-3.0 0 0.001 0 0 1.5707963</pose><geometry><box><size>7.0 0.05 0.002</size></box></geometry><material><ambient>1 0.85 0 1</ambient><diffuse>1 0.85 0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- EAST ZONE: SLAM & Navigation Obstacle Maze (x: 1 to 8) -->
+    <model name="maze_wall_1"><static>true</static><pose>4.5 4.0 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>4.5 0.2 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>4.5 0.2 0.8</size></box></geometry><material><ambient>0.7 0.5 0.3 1</ambient><diffuse>0.7 0.5 0.3 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="maze_wall_2"><static>true</static><pose>3.0 0.0 0.4 0 0 1.5707963</pose>
+      <link name="l"><collision name="c"><geometry><box><size>4.0 0.2 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>4.0 0.2 0.8</size></box></geometry><material><ambient>0.7 0.5 0.3 1</ambient><diffuse>0.7 0.5 0.3 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="maze_wall_3"><static>true</static><pose>6.0 -2.5 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>4.0 0.2 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>4.0 0.2 0.8</size></box></geometry><material><ambient>0.7 0.5 0.3 1</ambient><diffuse>0.7 0.5 0.3 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Obstacle Cylinders & Crates -->
+    <model name="pillar_east"><static>true</static><pose>6.0 1.5 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.3</radius><length>0.8</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.3</radius><length>0.8</length></cylinder></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="crate_east"><static>true</static><pose>4.0 -4.5 0.3 0 0 0.4</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.6 0.6 0.6</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.6 0.6 0.6</size></box></geometry><material><ambient>0.8 0.6 0.2 1</ambient><diffuse>0.8 0.6 0.2 1</diffuse></material></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

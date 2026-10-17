@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- ======================== 2D LiDAR ======================== -->
+  <gazebo reference="lidar_frame">
+    <sensor name="lidar" type="gpu_lidar">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>20</update_rate>
+      <topic>scan</topic>
+      <gz_frame_id>lidar_frame</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.16</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>none</type>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <!-- ======================== Stereo & Depth Camera ======================== -->
+  <!-- Left Camera (Stereo Left) -->
+  <link name="camera_left_link"/>
+  <joint name="camera_left_joint" type="fixed">
+    <origin xyz="0.0 0.03 0.0" rpy="0 0 0"/>
+    <parent link="depth_cam"/>
+    <child link="camera_left_link"/>
+  </joint>
+
+  <link name="camera_left_optical_frame"/>
+  <joint name="camera_left_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+    <parent link="camera_left_link"/>
+    <child link="camera_left_optical_frame"/>
+  </joint>
+
+  <!-- Right Camera (Stereo Right) -->
+  <link name="camera_right_link"/>
+  <joint name="camera_right_joint" type="fixed">
+    <origin xyz="0.0 -0.03 0.0" rpy="0 0 0"/>
+    <parent link="depth_cam"/>
+    <child link="camera_right_link"/>
+  </joint>
+
+  <link name="camera_right_optical_frame"/>
+  <joint name="camera_right_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+    <parent link="camera_right_link"/>
+    <child link="camera_right_optical_frame"/>
+  </joint>
+
+  <!-- Depth Camera Optical Frame -->
+  <link name="depth_cam_optical_frame"/>
+  <joint name="depth_cam_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+    <parent link="depth_cam"/>
+    <child link="depth_cam_optical_frame"/>
+  </joint>
+
+  <!-- Gazebo Sensor: Left Camera -->
+  <gazebo reference="camera_left_link">
+    <sensor name="camera_left" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <topic>camera/left/image_raw</topic>
+      <camera_info_topic>camera/left/camera_info</camera_info_topic>
+      <gz_frame_id>camera_left_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.25</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>20.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- Gazebo Sensor: Right Camera -->
+  <gazebo reference="camera_right_link">
+    <sensor name="camera_right" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <topic>camera/right/image_raw</topic>
+      <camera_info_topic>camera/right/camera_info</camera_info_topic>
+      <gz_frame_id>camera_right_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.25</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>20.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- Gazebo Sensor: Depth Camera -->
+  <gazebo reference="depth_cam">
+    <sensor name="camera_depth" type="depth_camera">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <topic>camera/depth/image_raw</topic>
+      <camera_info_topic>camera/depth/camera_info</camera_info_topic>
+      <gz_frame_id>depth_cam_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.25</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.10</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ======================== IMU ======================== -->
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <topic>imu</topic>
+      <gz_frame_id>imu_link</gz_frame_id>
+      <imu>
+        <angular_velocity>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>0.001</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>0.001</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>0.001</stddev></noise></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>0.01</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>0.01</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>0.01</stddev></noise></z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+</robot>

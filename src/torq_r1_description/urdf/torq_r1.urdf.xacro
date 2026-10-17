@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="torq_r1" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Materials & inertial macros -->
+  <xacro:include filename="$(find torq_r1_description)/urdf/materials.xacro"/>
+  <xacro:include filename="$(find torq_r1_description)/urdf/inertial_matrix.xacro"/>
+
+  <!-- Robot chassis and wheels (Differential Drive) -->
+  <xacro:include filename="$(find torq_r1_description)/urdf/ack_diff.xacro"/>
+
+  <!-- Sensors (2D LiDAR, Stereo & Depth Camera, IMU) -->
+  <xacro:include filename="$(find torq_r1_description)/urdf/sensors.xacro"/>
+
+  <!-- Gazebo Sim 8 plugins -->
+  <xacro:include filename="$(find torq_r1_description)/urdf/gazebo_plugins.xacro"/>
+
+</robot>
